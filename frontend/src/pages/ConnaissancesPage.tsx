@@ -8,6 +8,7 @@ export default function ConnaissancesPage() {
   const [categories, setCategories] = useState([]);
   const [selectedCat, setSelectedCat] = useState<number | undefined>(undefined);
   const [editConnaissance, setEditConnaissance] = useState<any>(null);
+  const [showForm, setShowForm] = useState(false);
 
   const refresh = () => {
     getConnaissances(selectedCat).then(setConnaissances);
@@ -22,6 +23,16 @@ export default function ConnaissancesPage() {
   const handleDelete = async (id: number) => {
     await deleteConnaissance(id);
     refresh();
+  };
+
+  const handleAddClick = () => {
+    setEditConnaissance(null);
+    setShowForm(true);
+  };
+
+  const handleFormClose = () => {
+    setShowForm(false);
+    setEditConnaissance(null);
   };
 
   return (
@@ -41,12 +52,23 @@ export default function ConnaissancesPage() {
               <option key={cat.id} value={cat.id}>{cat.nom}</option>
             ))}
           </select>
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 transition"
+            onClick={handleAddClick}
+          >
+            Ajouter une connaissance
+          </button>
         </div>
-        <ConnaissanceForm
-          onAdd={refresh}
-          connaissanceToEdit={editConnaissance}
-          onEditEnd={() => setEditConnaissance(null)}
-        />
+        {showForm && (
+          <ConnaissanceForm
+            onAdd={() => {
+              refresh();
+              setShowForm(false);
+            }}
+            connaissanceToEdit={editConnaissance}
+            onEditEnd={handleFormClose}
+          />
+        )}
         <div className="mt-10 grid gap-6 sm:grid-cols-2">
           {connaissances.length === 0 ? (
             <div className="col-span-2 text-center text-gray-400 italic">
@@ -57,7 +79,10 @@ export default function ConnaissancesPage() {
               <ConnaissanceCard
                 key={c.id}
                 connaissance={c}
-                onEdit={setEditConnaissance}
+                onEdit={(connaissance: any) => {
+                  setEditConnaissance(connaissance);
+                  setShowForm(true);
+                }}
                 onDelete={handleDelete}
               />
             ))
@@ -67,3 +92,4 @@ export default function ConnaissancesPage() {
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-const API_URL = "http://localhost/mes-connaissances/backend/public";
+const API_URL = "http://localhost:8000";
 
 export async function getConnaissances(categorie_id?: number) {
   let url = `${API_URL}/connaissances.php`;
@@ -26,10 +26,8 @@ export async function updateConnaissance(data: any) {
 }
 
 export async function deleteConnaissance(id: number) {
-  const res = await fetch(`${API_URL}/connaissances.php`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id }),
+  const res = await fetch(`${API_URL}/connaissances.php?id=${id}`, {
+    method: "DELETE"
   });
   return res.json();
 }
@@ -58,10 +56,8 @@ export async function updateCategory(data: any) {
 }
 
 export async function deleteCategory(id: number) {
-  const res = await fetch(`${API_URL}/categories.php`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id }),
+  const res = await fetch(`${API_URL}/categories.php?id=${id}`, {
+    method: "DELETE"
   });
   return res.json();
 }
